@@ -1,6 +1,6 @@
 {
     "name": "express-middleware-select",
-    "version": "1.0.0",
+    "version": "0.0.0",
     "description": "An express middleware to select which express middleware to use.",
     "repository": {
         "type": "git",
