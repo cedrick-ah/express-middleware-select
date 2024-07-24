@@ -1,36 +1,69 @@
-# ts-node-pckg-starter
+# express-middleware-select
 
-Un point de départ simple pour écrire des packages npm en TypeScript.
-Ceci n'est pas un guide complet sur comment coder un package npm en TypeScript.
+Select a middleware to execute.
 
-# Comment utiliser
-- Cloner le dépôt
-```
-git clone https://github.com/kryptapay/ts-node-pckg-starter <nom_du_projet>
-```
+You must provide as the first parameter a number which is the index of the middleware to be executed in an array of middlewares passed as the second parameter.
 
-- Installer les dépendences
-```
-cd <nom_du_projet>
-npm install
-```
+```typescript
+import express from "express";
+import { select } from "express-middleware-select";
 
-- Lancer le serveur de développement
-```
-npm run dev
-```
+const app = express();
 
-- Tester
-```
-npm test
-```
-
-- Faire un build à publier
-```
-npm run build:types
+app.use(
+    select(
+        function (req: Request) {
+            if (req.headers["accept"] === "application/json") return 0;
+            else return 1;
+        },
+        [
+            function (req: Request, res: Response) {
+                res.end("json");
+            },
+            function (req: Request, res: Response) {
+                res.end("text");
+            },
+        ]
+    )
+);
 ```
 
-- Générer la documentation
+You can also use it by passing a number as first parameter:
+
+```typescript
+app.use(
+    select(1, [
+        function (req: Request, res: Response) {
+            res.end("json");
+        },
+        function (req: Request, res: Response) {
+            res.end("text");
+        },
+    ])
+);
 ```
-npm run docs
+
+You can also use it as CommonJS module.
+
+```typescript
+const { select } = require("express-middleware-select");
+
+const app = express();
+
+app.use(
+    select(
+        function (req: Request) {
+            if (req.headers["accept"] === "application/json") return 0;
+            else return 1;
+        },
+        [
+            function (req: Request, res: Response) {
+                res.end("json");
+            },
+            function (req: Request, res: Response) {
+                res.end("text");
+            },
+        ]
+    )
+);
 ```
